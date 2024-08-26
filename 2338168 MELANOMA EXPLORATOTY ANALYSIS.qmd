@@ -1,0 +1,282 @@
+---
+title: "2338168 Maligant Melanoma Analysis"
+author: "Opeyemi Olaosebikan"
+format: 
+  html: 
+    code-fold: true
+    code-link: true
+    embed-resources: true
+    number-sections: true
+    toc: true
+editor: visual
+---
+
+```{r}
+
+#| label: load packages
+#| include: false
+#| echo: false
+#| warning: false
+
+library(tidyverse)
+library(downlit)
+library(tidyverse)
+library(ggthemes)
+library(ggplot2)
+
+```
+
+```{r}
+#| label: load data
+#| include: false
+
+melanoma_2_ <- read_csv("C:/Users/opeol/Downloads/melanoma (2).csv")
+```
+
+------------------------------------------------------------------------
+
+## Introduction
+
+This document presents an exploratory graphical analysis of the "Survival from Malignant Melanoma" data setwhich is available on Canvas. The data consists of measurements made on patients with malignant melanoma. Each patient had their tumor removed by surgery at the Department of Plastic Surgery, University Hospital of Odense, Denmark during the period 1962 to 1977. The surgery consisted of complete removal of the tumor together with about 2.5cm of the surrounding skin.
+
+### The 1977 Maligant Melanoma DataSet
+
+Among the measurements taken were the thickness of the tumor in 'mm' and whether it was ulcerated or not with which was represented with categorical variables 0 and 1 where 0 indicates the absence of ulceration and 1 indicates presence of ulcers on the tumors removed . These are thought to be important prognostic variables in that patients with a thick and/or ulcerated tumor have an increased chance of death from melanoma. Patients were followed until the end of 1977. The data also includes information on the 'time in days' since the operation and of the status of patients at the end of the study in 1977. '1 indicating that they had died from melanoma, 2 indicates that they were still alive and 3 indicates that they had died from causes unrelated to their melanoma.' The data also includes the sex of patients,1=male, 0=female, the age of patients in years at the time of the operation and year of operation were also recorded.
+
+```{r}
+view(melanoma_2_)
+#remove missing values and Reassign Dataset
+melanoma_2 <- na.omit(melanoma_2_)
+
+```
+
+## Exploratory Data Analysis
+
+This section will provide appropriate statistical and graphical summary for each variable in the dataset
+
+### Numerical Summary
+
+```{r}
+summary(melanoma_2)
+```
+
+### Time
+
+```{r}
+#| echo: false
+
+# Time Data Five Number Summary  
+summary(melanoma_2$time)
+# Standard Deviation
+sd(melanoma_2$time)
+# Variance
+var(melanoma_2$time)
+
+```
+
+The `Time` variable has a mean of 2153 days and a standard deviation of 1122.061 days, with a minimum value of 10 days and a maximum value of 5565 days. 
+
+```{r}
+#Visualise of time distribution
+hist(melanoma_2$time, main = "Survival Time after Surgery", xlab = "Time after surgery in days", ylab = "Survival Probability")
+```
+
+The above histogram of the `Time` variable visualizes the distribution of survival times among patients. The x-axis represents the survival time in days, and the y-axis represents the frequency of patients with that survival time. The histogram easily identifies a good proportion of patients lived for about 1500 to 2500 days after surgery.
+
+### Status
+
+```{r}
+#| echo: false
+
+# Status Data Five Number Summary 
+ summary(melanoma_2$status) 
+ # Standard Deviation
+ sd(melanoma_2$status) 
+ # Variance
+ var(melanoma_2$status)
+
+```
+
+The `Status` variable has a mean of 1.79, indicating that most patients died from melanoma
+
+```{r}
+#Visualise Status distribution
+#hist(melanoma_2$status, main = "Survival Status of Patient in 1977 ", xlab = "Survival Status")
+
+status_counts <- table(melanoma_2$status)
+# Create a color palette for the pie chart
+colors <- c("red", "green", "blue")
+# Create the pie chart
+pie(status_counts, labels = c("Died from Melanoma", "Still Alive", "Died Unrelated"), col = colors, main = "Survival Status of Patients in 1977")
+```
+
+The histogram of the `Status` variable visualizes the distribution of patients who died from melanoma, were still alive, or died from other causes. The x-axis represents the status of the patient, and the y-axis represents the number of patients with that status. The histogram indicates a high survival rate amongst patients with majority of them still alive at the end of the study.
+
+### Sex
+
+```{r}
+ #| echo: false
+ 
+ # Sex Data Five Number Summary 
+ summary(melanoma_2$sex) 
+ # Standard Deviation
+ sd(melanoma_2$sex) 
+ # Variance
+ var(melanoma_2$sex)
+```
+
+The `Sex` variable has a mean of 0.3854, indicating that the majority of patients were female
+
+```         
+```
+
+A barplot of the `Sex` variable visualizes the proportion of male and female patients in the data set. A significant observation of the gender distribution indicates melanoma is more common in females than in males. As observed we surgery was performed on 79 males compared to almost double the figures of female patients at 126
+
+```{r}
+ggplot(melanoma_2, aes(x = factor(sex), fill = factor(sex))) + geom_bar() + labs(title = "Sex Distribution of Patients with Melonoma", x = "Sex of Patients with Melonoma", y = "Frequency", fill = "Sex") + scale_x_discrete(labels = c("Female", "Male")) + geom_text(stat = "count", aes(label = stat(count)), vjust = -0.5) + theme_minimal()
+```
+
+### Age of Patient at Time of Operation
+
+```{r}
+  #| echo: false
+
+# Age Data Five Number Summary 
+ summary(melanoma_2$age) 
+ # Standard Deviation
+ sd(melanoma_2$age) 
+ # Variance
+ var(melanoma_2$age)
+```
+
+The `Age` variable has a mean of 52.46 years and a standard deviation of 16.6 years, with a minimum age of 4 years and a maximum age of 95 years
+
+```{r}
+
+```
+
+```{r}
+boxplot(melanoma_2$age , main = "Boxplot of Patient's Age", ylab = "Age of Patients in Years")
+```
+
+The boxplot of the `Age` variable above visualizes an even distribution of ages among patients. An observation below the lower quartile is also recorded which indicates one of the patients was of considerable lower age than the rest of the patients.
+
+```{r}
+hist(melanoma_2$age)
+```
+
+An histogram of the `Age` variable also helps observes the contraction of patients between the ages of 40 and 70.
+
+### Year of Operation
+
+```{r}
+#| echo: false
+
+# Year of Operation Data Five Number Summary 
+ summary(melanoma_2$year) 
+ # Standard Deviation
+ sd(melanoma_2_$year)
+ # Variance
+ var(melanoma_2_$year)
+```
+
+The `Year` variable has a mean of 1970 and a standard deviation of 2.57, with the earliest year being 1962 and the latest year being 1977
+
+```{r}
+#hist(melanoma_2$year, main = "Year of Surgery", xlab = "Year", ylab = "Frequency")
+#boxplot(melanoma_2$year, main = "Year of Surgery", xlab = "Year", ylab = "Frequency")
+ggplot(melanoma_2, aes(x = factor(year), fill = factor(year))) + geom_bar() + labs(title = "Distribution of Year of Surgery", x = "Year of Surgery", y = "Frequency", fill = "Year") + scale_x_discrete(labels = c("Year of Surgery")) + geom_text(stat = "count", aes(label = stat(count)), vjust = -0.5) + theme_minimal()
+ ggplot(melanoma_2, aes(x=year)) + geom_line(stat='count', color="blue") + labs(title="Distribution on Year of Surgery", x="Years of Surgery", y="Frequency") + geom_text(stat = "count", aes(label = stat(count)), vjust = -0.5)
+```
+
+The histogram and boxplot visual representation of the year variable reveals a concentration of surgery was done between 1968 and 1972. The highest frequency could be observed with the histogram falling between 1970 and 1972.It canalso be seen that there were no surgeries performed between 1974 and 1976 and lowest observations in 1977 towards the end of the study.
+
+### Thickness of Tumor
+
+```{r}
+#| echo: false
+
+#Thickness of Tumor Data Five Number Summary 
+ summary(melanoma_2$thickness) 
+ # Standard Deviation
+ sd(melanoma_2$thickness) 
+ # Variance
+ var(melanoma_2$thickness)
+```
+
+The `Thickness` variable has a mean of 2.9 mm and a standard deviation of 2.95 mm, with a minimum thickness of 0.1 mm and a maximum thickness of 17.42 mm.
+
+```{r}
+ggplot(melanoma_2_, aes(x=thickness)) + geom_histogram(binwidth=0.5, fill="blue", color="black") + labs(title="Histogram of Thickness", x="Thickness", y="Frequency")
+ggplot(melanoma_2, aes(x=thickness)) + geom_histogram(binwidth=0.5, fill="blue", color="black") + labs(title="Histogram on Thickness of Tumor", x="Thickness of Tumor", y="Frequency", fill = "thickness") + geom_text(stat = "count", aes(label = stat(count)), vjust = -0.5) + theme_minimal()
+boxplot(melanoma_2$thickness , main = "Boxplot on Thickness of Tumor", ylab = "on Thickness of Tumor")
+hist(melanoma_2$thickness, main = "Histogram on Thickness of Tumor", xlab = "Thickness of Tumor", ylab = "Frequency")
+ggplot(melanoma_2, aes(x = factor(thickness), fill = factor(thickness))) + geom_bar() + labs(title = "Histogram on Thickness of Tumor", x = "Thickness of Tumor", y = "Frequency", fill = "thickness") + scale_x_discrete(labels = c("thickness", "thickness")) + geom_text(stat = "count", aes(label = stat(count)), vjust = -0.5) + theme_minimal()
+```
+
+### Ulceration
+
+```{r}
+#| echo: false
+
+# Presence of Ulceration Data Five Number Summary 
+ summary(melanoma_2$ulcer) 
+ # Standard Deviation
+ sd(melanoma_2$ulcer) 
+ # Variance
+ var(melanoma_2$ulcer)
+```
+
+The `Ulcer` variable has a mean of 0.44 , indicating that most patients did not have ulceration.
+
+```{r}
+ggplot(melanoma_2, aes(x=ulcer)) + geom_bar(fill="blue", color="black") +   labs(title="Bar Plot of Ulcer", x="Ulcer", y="Frequency")
+ggplot(melanoma_2, aes(x=ulcer)) + geom_histogram(binwidth=0.5, fill="blue", color="black") + labs(title="Histogram on the Presence of Ulcers in Tumors Removed", x="ulcer", y="Frequency", fill = "ulcer") + geom_text(stat = "count", aes(label = stat(count)), vjust = -0.5) + theme_minimal()
+```
+
+```{r}
+ggplot(melanoma_2, aes(x=ulcer)) + geom_line(stat='count', color="blue") + labs(title="Line Plot of Ulcer", x="Ulcer Present", y="Frequency")
+```
+
+The line plot clearly shows that tumors removed from most patients were without ulceration.
+
+## Correlation and Regression Analysis
+
+### Time and Thickness
+
+In this section we want to find out if a linear relationship exists between Age, thickness, and time variables,how strong are those relationships and what the relationships are if they exist
+
+```{r}
+TT_model <- lm(time ~ thickness, melanoma_2)
+summary(TT_model)
+TT_model = lm(formula = melanoma_2$time ~ melanoma_2$thickness)
+TT_model
+summary(TT_model)
+ggplot(melanoma_2, aes(x = thickness, y = time)) + geom_point() + geom_smooth(method = "lm", se = FALSE, color = "blue") + labs(title = "Scatter Plot with Linear Regression Line",x = "Thickness", y = "Time") + theme_minimal()
+#plot(melanoma_2$time, melanoma_2$thickness, melanoma_2_)
+cor(melanoma_2$time, melanoma_2$thickness)
+LinRegTT <- lm(formula = melanoma_2$time ~ melanoma_2$thickness)
+LinRegTT
+summary(LinRegTT)
+
+
+```
+
+### Time and Age
+
+```{r}
+ggplot(melanoma_2, aes(x = time, y = age)) + geom_point() + geom_smooth(method = "lm", se = FALSE, color = "blue") + labs(title = "Scatter Plot with Linear Regression Line",x = "Time", y = "Age") + theme_minimal()
+cor(melanoma_2$time, melanoma_2$age)
+LinRegTA <- lm(formula = melanoma_2$time ~ melanoma_2$age)
+LinRegTA
+summary(LinRegTA)
+```
+
+### Thickness and Age
+
+```{r}
+ggplot(melanoma_2, aes(x = thickness, y = age)) + geom_point() + geom_smooth(method = "lm", se = FALSE, color = "blue") + labs(title = "Scatter Plot with Linear Regression Line",x = "Thickness", y = "Age") + theme_minimal()
+cor(melanoma_2$thickness, melanoma_2$age)
+LinRegTHA <- lm(formula = melanoma_2$thickness ~ melanoma_2 $age)
+LinRegTHA
+```
